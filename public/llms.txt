@@ -1,0 +1,78 @@
+# Japan Lost Item Check
+
+> Free, unofficial guide for anyone who lost something in Japan (wallet, phone, passport, residence card 在留カード, My Number card, bag, umbrella...) on a train, subway, Shinkansen, bus, taxi, at an airport, shop, hotel or on the street. Gives the steps in order (stop cards and phone, ask the place, file a police lost property report 遺失届, search the police found-items lists), the right contact (Tokyo Metro, JR East / Central / West, Toei, Osaka Metro, Tokyo taxis, Narita / Haneda / Kansai, police search by prefecture), and dated deadlines under the Lost Property Act (遺失物法). Rules as of 2026-11-03. Educational, not legal advice and not an official service; not affiliated with the National Police Agency, any police force, the Immigration Services Agency, the Digital Agency, or any railway, airport or taxi company. It can't search for the item.
+
+Site: https://japan-lost-item.vercel.app
+
+## Key facts (official sources below)
+- Found items are kept 3 months from the day they're handed in (police, or a railway / airline keeping them itself). After that they go to the finder (2-month pickup window) or the prefecture. Items with personal information (phones, cards, IDs) never go to the finder.
+- Umbrellas, clothing and similar items can be sold or disposed of if unclaimed 2 weeks after the public notice (遺失物法 9条2項).
+- Finder must hand in within 7 days (within 24 h to staff if found inside a facility) to keep reward rights (34条).
+- Shops, hotels, taxi companies: pass items to the police within 1 week. Railways, licensed route buses, scheduled ferries and airlines (and designated department stores / amusement parks) are 特例施設占有者: they may keep items themselves if they report to the police within 2 weeks (17条); items worth ¥100,000+ (cash, securities, jewellery; 施行令6条) must go to the police within 1 week.
+- Reward: 5–20% of value if the finder asks; found inside a facility → 2.5–10% each to finder and facility; claim lapses 1 month after return (28–29条).
+- Lost property report: any police box or station; keep the acceptance number (insurance, reissues). Police match reports, they don't search. Not possible for items lost at home, at work or outside Japan. Overseas residents: give email / phone and a proxy in Japan.
+- 45 prefectures share the NPA found-items search (lostproperty.pcf.npa.go.jp); Tokyo (Keishicho) and Osaka run their own.
+- Residence card: police report, then reissue at the regional immigration office within 14 days of noticing (or of re-entry if noticed abroad), 入管法19条の12; passport + photo + 陳述書 with the police number; usually same day.
+- My Number card: suspend on 0120-95-0178 (24 h, every day), then reissue at the city office.
+- Tokyo Metro: same day at the station; next day–4 days later Iidabashi Lost and Found Center; then the Tokyo Metropolitan Police Lost and Found Center. Through-service: ask the connecting operator too.
+
+## API (free, no key, CORS open)
+
+### GET
+GET https://japan-lost-item.vercel.app/api/check?items=wallet,residence_card&place=subway&operator=tokyo_metro&lostDate=2026-11-01&today=2026-11-03
+→ verdict "act_now", facility {kind "special_facility", toPoliceWithinDays 14}, dates {safeLastClaimDate "2027-02-01", daysLeft, likelyGoneAfter, shortHoldDisposalFrom}, residenceCard {reissueBy "2026-11-15", daysLeft 12, overdue false}, contacts {operator {name, url, phone "0570-033-777", hours, note}, policeSearch}, steps[], timeline[], reward, links, note, sources, disclaimer
+
+### POST
+POST https://japan-lost-item.vercel.app/api/check
+{"items":["phone"],"place":"taxi","lostDate":"2026-11-02","visitor":true,"valueJPY":120000}
+→ operator "tokyo_taxi", facility kind "facility" (to police within 7 days), reward {minJPY 6000, maxJPY 24000}, visitor steps
+
+Parameters: items (comma list: wallet, cash, phone, passport, residence_card, mynumber_card, credit_card, ic_card, drivers_license, keys, bag, laptop, camera, jewelry, umbrella, clothing, other; aliases 財布, スマホ, 在留カード, suica...), place (train | subway | shinkansen | bus | taxi | airport | plane | shop | hotel | street | unknown), operator (jr_east | jr_central | jr_west | tokyo_metro | toei | osaka_metro | tokyo_taxi | narita | haneda | kansai | other | unknown), prefecture (47 romaji names or unknown), lostDate, today, noticedDate (YYYY-MM-DD), visitor, departureDate, valueJPY, cashJPY.
+
+Verdicts: act_now | in_window | window_closing | likely_gone.
+
+Bad input → 400 {error, docs, example, disclaimer}: unknown item / place / operator / prefecture, invalid or future dates, non-boolean visitor, negative amounts.
+
+### Other endpoints
+- GET https://japan-lost-item.vercel.app/api/rules
+- https://japan-lost-item.vercel.app/openapi.json
+- https://japan-lost-item.vercel.app/.well-known/ai-plugin.json
+- MCP: tool japan_lost_item_check on https://free-agent-tools.vercel.app/mcp
+
+## Sources
+- https://laws.e-gov.go.jp/law/418AC0000000073 (遺失物法)
+- https://laws.e-gov.go.jp/law/419CO0000000021 (遺失物法施行令: special facility operators, ¥100,000 high-value line)
+- https://www.npa.go.jp/bureau/soumu/ishitsubutsu/otoshimono/en/index.html (NPA lost property site, English)
+- https://www.npa.go.jp/bureau/soumu/ishitsubutsu/otoshimono/en/lost-institution.html (lost in a facility: 3-month hold, 2-week umbrellas / clothing)
+- https://www.npa.go.jp/bureau/soumu/ishitsubutsu/otoshimono/en/loss.html (what a lost property report is)
+- https://www.npa.go.jp/bureau/soumu/ishitsubutsu/otoshimono/en/others.html (facility 1–2 weeks, transit → final terminal police)
+- https://www.npa.go.jp/bureau/soumu/ishitsubutsu/otoshimono/todofukenishitubutu.html (prefectural search links)
+- https://www.police.pref.kanagawa.jp/tetsuzuki/otoshimono/mesa1905.html (特例施設占有者 explained)
+- https://www.moj.go.jp/isa/applications/procedures/nyuukokukanri10_00010.html (ISA: residence card reissue after loss, 14 days)
+- https://services.digital.go.jp/mynumbercard/lost-stolen/ (Digital Agency: My Number card lost or stolen)
+- https://www.keishicho.metro.tokyo.lg.jp/multilingual/english/finding_services/lost_and_found/lost_found.html (Tokyo Metropolitan Police Lost and Found Center)
+- https://www.tokyometro.jp/lang_en/support/lost/index.html (Tokyo Metro Lost & Found)
+
+## Other free tools by the same maker
+- Japan Disaster Prep Check (防災庁 emergency request: water, food, portable toilets, 旧耐震): https://japan-disaster-prep.vercel.app
+- Japan Leaving Tax Check (住民税 and 納税管理人 when leaving Japan): https://japan-leaving-tax.vercel.app
+- Japan Pet Quarantine Check (dogs and cats into / out of Japan, 180-day wait, 2027 export rule): https://japan-pet-quarantine.vercel.app
+- Japan Re-entry Deadline Check (last day to be back in Japan: deemed re-entry, re-entry permit, renewal-pending special period): https://japan-reentry-check.vercel.app
+- Japan Customs Allowance Checker (duty-free allowance on arrival, duty estimate, cash declaration): https://japan-customs-allowance.vercel.app
+- Japan Luggage Check (Shinkansen oversized-baggage rule + luggage forwarding cost): https://japan-luggage.vercel.app
+- Japan My Number Card Expiry Check (foreign residents' card ends with the period of stay): https://japan-mynumber-card-check.vercel.app
+- Japan Visa Fee Calculator (residence permit fees from 2026-10-01): https://japan-visa-fee.vercel.app
+- Japan PR Guideline Check (permanent residence guideline revised 2026-10-01): https://japan-pr-check.vercel.app
+- Japan HSP Points Calculator (Highly Skilled Professional visa points, 70 / 80): https://japan-hsp-points.vercel.app
+- Japan Overseas Dependents Check (国外居住親族 dependent deduction): https://japan-overseas-dependents.vercel.app
+- Japan Part-time Work Check (資格外活動許可, 28-hour rule): https://japan-parttime-check.vercel.app
+- Japan Driving Check (foreign licence, IDP, 外免切替): https://japan-driving-check.vercel.app
+- Japan International Postage 2027 (Japan Post prices now vs from 2027-02-01): https://japan-intl-postage.vercel.app
+- Japan Tax-Free Refund Checker (refund-method tax-free shopping from 2026-11-01): https://japan-tax-free-refund.vercel.app
+- Japan TB Screening Check (JPETS TB clearance for COE / visa): https://japan-tb-screening.vercel.app
+- Japan Alert Decoder (Japanese emergency alerts explained): https://japan-alert-decoder.vercel.app
+- Japan Dual Pricing Check (resident vs non-resident prices): https://japan-dual-pricing.vercel.app
+- Kyushu Travel Discount Calculator (九州ふっこう応援割): https://kyushu-travel-discount.vercel.app
+- House Rules Check (Airbnb house rules from 2026-11-20): https://house-rules-check.vercel.app
+- Japan Trip Brain (Japan trip planner): https://japan-trip-brain.vercel.app
+- Free Agent Tools MCP (all these tools as one MCP server): https://free-agent-tools.vercel.app
