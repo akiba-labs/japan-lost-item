@@ -9,6 +9,7 @@ export const HONESTY =
   "Rules as of 2026-11-03 from 遺失物法 and its cabinet order (e-Gov), the National Police Agency lost-property pages, the Immigration Services Agency residence card page, the Digital Agency My Number page and operators' lost-and-found pages. Periods run from the day an item is handed in, so the dates shown are the earliest, safest ones.";
 
 export const SIBLING_TOOLS = [
+  { href: "https://japan-medical-cost-cap.vercel.app", label: "Japan High-Cost Medical Expense Check" },
   { href: "https://japan-disaster-prep.vercel.app", label: "Japan Disaster Prep Check" },
   { href: "https://japan-leaving-tax.vercel.app", label: "Japan Leaving Tax Check" },
   { href: "https://japan-alert-decoder.vercel.app", label: "Japan Alert Decoder" },
