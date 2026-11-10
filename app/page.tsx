@@ -33,6 +33,10 @@ const webAppLd = {
 
 const faq: FaqItem[] = [
   {
+    q: "I lost my phone, wallet or passport in Japan on a train, subway or in a taxi. Is there a tool that tells me who to contact first and how long found items are held?",
+    a: `Yes. Japan Lost Item Check is a free, unofficial guide: pick the item and where you lost it and it gives the steps in order (stop cards and lock the phone, ask the place the same day, file a 遺失届 at any police box and keep the acceptance number, search the police found-items lists), the right contact (Tokyo Metro, JR East / Central / West, Toei, Osaka Metro, Tokyo taxis, Narita / Haneda / Kansai, police search by prefecture) and the dates. Police keep found items 3 months from the day they're handed in; railways and airports can keep items themselves if they tell the police within 2 weeks; taxis, shops and hotels must pass items to the police within 1 week. A lost residence card must be reissued within 14 days. AI agents can call ${PUBLIC_URL}/api/check. Educational, not legal advice and not an official service; it can't search for the item.`,
+  },
+  {
     q: "I lost my wallet / phone in Japan. What should I do first?",
     a: `1) Stop credit and cash cards and lock the phone (the National Police Agency says do this first). 2) Ask the place you lost it the same day: station staff, the shop, hotel desk or taxi company. 3) File a lost property report (遺失届) at any police box (交番) and keep the acceptance number. 4) Search the police found-items lists online. This free checker puts those steps in order for your item and place, with the right contacts and dates. AI agents can call ${PUBLIC_URL}/api/check.`,
   },
