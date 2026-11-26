@@ -2,11 +2,24 @@
 
 Free checker for anyone who lost something in Japan: who to contact first (station, Tokyo Metro, JR East / Central / West, Osaka Metro, taxi, Narita / Haneda / Kansai, police), what to stop right away (cards, phone, My Number card), how long found items are kept under the Lost Property Act (遺失物法: 3 months; umbrellas and clothing may go after 2 weeks), when shops and railways hand items to the police, the finder's reward (5–20%) and the residence card (在留カード) 14-day reissue deadline. English + Japanese.
 
-Live: https://japan-lost-item.vercel.app
-
+- Full app and API (Vercel): https://japan-lost-item.vercel.app
+- Checker (GitHub Pages): https://akiba-labs.github.io/japan-lost-item/
 - API: `GET /api/check?items=wallet,residence_card&place=subway&operator=tokyo_metro&lostDate=2026-11-01` (keyless, CORS open, POST JSON too), `/api/rules`, `/openapi.json`, `/llms.txt`, `/.well-known/ai-plugin.json`
 - MCP: `japan_lost_item_check` on https://free-agent-tools.vercel.app/mcp
 
 Sources: 遺失物法 and 遺失物法施行令 (e-Gov), National Police Agency lost-property site, prefectural police (Keishicho, Osaka, Kanagawa), Immigration Services Agency, Digital Agency, operator lost-and-found pages. Rules as of 2026-11-03.
 
 **Disclaimer:** educational, not legal advice and not an official service; not affiliated with the National Police Agency, any police force, the Immigration Services Agency, the Digital Agency, or any railway, airport or taxi company. It can't search for your item.
+
+## Dev
+
+```
+npm install
+npm test
+npm run build
+npm run build:pages
+```
+
+`npm run build` is the Vercel app (checker, JSON API, share pages). `npm run build:pages` writes a static `out/` for GitHub Pages and checks that internal links and assets resolve under `/japan-lost-item`. Server routes stay in the repo; the Pages script only moves them aside for that build.
+
+GitHub settings: **Settings → Pages → Build and deployment → Source: GitHub Actions**. Pushes to `main` deploy with `.github/workflows/pages.yml`. The copy-paste steps for the other tool repos are at the top of `scripts/build-pages.mjs`.
