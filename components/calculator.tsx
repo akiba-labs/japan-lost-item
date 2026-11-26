@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CardDisclaimer } from "@/components/card-disclaimer";
 import { ShareBar } from "@/components/share-bar";
 import { ITEMS, OPERATORS, PLACES, PREFECTURES, type Item, type Operator, type Place, type Prefecture } from "@/lib/lost";
+import { isGithubPages, pagesSiteUrl } from "@/lib/hosting";
 import { EXAMPLE_SHARED, PUBLIC_URL, resultPath, safeCheck, type Shared } from "@/lib/share";
 import { VERDICT_LABEL, VERDICT_STYLE } from "@/lib/verdict";
 
@@ -32,7 +33,7 @@ export function Calculator({ initial }: { initial?: Shared }) {
     return { ...p, items: next.length ? next : p.items };
   });
   const r = safeCheck(s);
-  const shareUrl = `${PUBLIC_URL}${resultPath(s)}`;
+  const shareUrl = isGithubPages ? `${pagesSiteUrl(PUBLIC_URL)}/` : `${PUBLIC_URL}${resultPath(s)}`;
 
   return (
     <div className="grid gap-6 lg:grid-cols-[0.9fr_1.3fr]">
@@ -154,7 +155,10 @@ export function Calculator({ initial }: { initial?: Shared }) {
                 ))}
               </p>
               <p className="mt-3 text-xs text-muted">{r.note}</p>
-              <div className="mt-6">
+              <div className="mt-6" data-testid="share-result">
+                {isGithubPages ? (
+                  <p className="mb-3 text-xs text-muted">Share the checker. A link to this exact result returns when hosting is back.</p>
+                ) : null}
                 <ShareBar url={shareUrl} text={`Lost something in Japan: ${r.summary}`} />
               </div>
             </>

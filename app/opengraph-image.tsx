@@ -1,5 +1,7 @@
 import { ImageResponse } from "next/og";
 
+export const dynamic = "force-static";
+
 export const alt = "Japan Lost Item Check: who to contact and how long found items are kept in Japan";
 export const size = { width: 1200, height: 630 };
 export const contentType = "image/png";
